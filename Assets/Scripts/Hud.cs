@@ -14,7 +14,15 @@ public class Hud : MonoBehaviour
     private float lastSecondBlink = -1.0f;
     Coroutine blinkCoroutine = null;
     Color textColor = Color.black;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private static bool isTimerRunning = true;
+
+    private static Hud instance;
+
+    void Awake()
+    {
+        instance = this;
+    }
+
     void Start()
     {
         RectTransform rectTransform = transform as RectTransform;
@@ -27,27 +35,39 @@ public class Hud : MonoBehaviour
     {
         time = 0.0f;
         lastSecondBlink = 30.0f;
+        isTimerRunning = true;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        time += Time.deltaTime;
-        time = Math.Max(time, 0.0f);
-        TimeSpan span = TimeSpan.FromSeconds(time);
-        timer.text = span.ToString(@"mm\:ss\.ff");
-        if (time >= 10.0f)
+        if (isTimerRunning)
         {
-            float flooredTime = Mathf.Floor(time);
-            if (flooredTime > lastSecondBlink)
+            time += Time.deltaTime;
+            time = Math.Max(time, 0.0f);
+            TimeSpan span = TimeSpan.FromSeconds(time);
+            timer.text = span.ToString(@"mm\:ss\.ff");
+            if (time >= 60.0f)
             {
-                lastSecondBlink = flooredTime;
-                if (blinkCoroutine != null)
+                float flooredTime = Mathf.Floor(time);
+                if (flooredTime > lastSecondBlink)
                 {
-                    StopCoroutine(blinkCoroutine);
+                    lastSecondBlink = flooredTime;
+                    if (blinkCoroutine != null)
+                    {
+                        StopCoroutine(blinkCoroutine);
+                    }
+                    blinkCoroutine = StartCoroutine(DoBlink(0.75f));
                 }
-                blinkCoroutine = StartCoroutine(DoBlink(0.75f));
             }
+        }
+    }
+
+    public static void StopTimer()
+    {
+        if (instance != null)
+        {
+            isTimerRunning = false;
+            Debug.Log("Timer stopped at: " + instance.timer.text);
         }
     }
 
@@ -88,4 +108,4 @@ public class Hud : MonoBehaviour
         rectTransform.DOScale(1.0f, duration * 0.2f);
         timer.DOColor(textColor, duration * 0.25f);
     }
- }
+}

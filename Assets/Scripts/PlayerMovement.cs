@@ -80,7 +80,12 @@ public class PlayerMovement : MonoBehaviour
             isGrounded = true;
             Debug.Log("On Ground");
         }
-            
+
+        if (other.CompareTag("Finish"))
+        {
+            Hud.StopTimer();
+        }
+
     }
     private void OnTriggerExit(Collider other)
     {
@@ -91,4 +96,5 @@ public class PlayerMovement : MonoBehaviour
         }
             
     }
+
 }
