@@ -4,14 +4,13 @@ using UnityEngine;
 public class BreakingObstacle : MonoBehaviour
 {
     public float fallTime = 0.5f;
-    public float comebackTime = 2f; // Time before the obstacle comes back
+    public float comebackTime = 2f;
 
     private MeshRenderer meshRenderer;
     private Collider collider;
 
     void Start()
     {
-        // Get the MeshRenderer and Collider components at the start
         meshRenderer = GetComponent<MeshRenderer>();
         collider = GetComponent<Collider>();
     }
@@ -26,17 +25,13 @@ public class BreakingObstacle : MonoBehaviour
 
     IEnumerator FallAndComeBack(float fallDelay, float returnDelay)
     {
-        // First, wait for the fallTime delay
         yield return new WaitForSeconds(fallDelay);
 
-        // Disable the obstacle's renderer and collider
         meshRenderer.enabled = false;
         collider.enabled = false;
 
-        // Wait for the comebackTime delay
         yield return new WaitForSeconds(returnDelay);
 
-        // Re-enable the obstacle's renderer and collider
         meshRenderer.enabled = true;
         collider.enabled = true;
     }
