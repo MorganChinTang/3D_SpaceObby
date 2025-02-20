@@ -1,5 +1,9 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine.Rendering;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -8,6 +12,8 @@ public class PlayerMovement : MonoBehaviour
     Rigidbody rb;
     [SerializeField]
     Animator animator;
+
+    public GameObject welldone;
 
     public float moveSpeed;
     public float jumpForce;
@@ -28,6 +34,7 @@ public class PlayerMovement : MonoBehaviour
         rb.freezeRotation = true;
 
         GameController.Instance.SetPlayerStartPosition(gameObject);
+        welldone.SetActive(false);
     }
 
     // Update is called once per frame
@@ -84,6 +91,7 @@ public class PlayerMovement : MonoBehaviour
         if (other.CompareTag("Finish"))
         {
             Hud.StopTimer();
+            welldone.SetActive(true);
         }
 
     }
